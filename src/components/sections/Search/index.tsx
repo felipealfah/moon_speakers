@@ -5,7 +5,7 @@ import Image from 'next/image';
 
 const Search = () => {
   return (
-    <section className="relative bg-white">
+    <section className="relative bg-white pt-[15px]">
       {/* Title Section */}
       <div className="mx-auto max-w-[1440px] px-4 lg:px-[120px]">
         <div className="mt-[58px] flex flex-col items-center">

@@ -1,42 +1,65 @@
 'use client';
 
-import React from 'react';
+import React, { useMemo } from 'react';
 import Image from 'next/image';
 
+// Array com todas as imagens disponíveis
+const availableImages = [
+  '/images/about/1.webp',
+  '/images/about/2.webp',
+  '/images/about/3.webp',
+  '/images/about/4.webp',
+  '/images/about/5.webp',
+  '/images/about/6.webp',
+  '/images/about/7.webp',
+  '/images/about/8.webp',
+  '/images/about/9.webp',
+];
+
 const About = () => {
+  // Seleciona 3 imagens aleatórias no carregamento do componente
+  const selectedImages = useMemo(() => {
+    const shuffled = [...availableImages].sort(() => Math.random() - 0.5);
+    return {
+      main: shuffled[0],
+      left: shuffled[1],
+      right: shuffled[2]
+    };
+  }, []); // Array vazio significa que só será executado uma vez, no mount do componente
+
   return (
     <section className="bg-black py-14">
       <div className="mx-auto max-w-[1440px] px-4 lg:px-[120px]">
         <div className="mt-20 grid grid-cols-12 gap-5">
           {/* Left Column - Speaker Images */}
-          <div className="col-span-12 lg:col-span-5 flex items-center">
-            <div className="grid grid-cols-6 gap-5">
+          <div className="col-span-12 lg:col-span-6 flex items-center">
+            <div className="grid grid-cols-6 gap-5 w-full">
               {/* Main large image */}
-              <div className="col-span-6 h-[400px] overflow-hidden rounded-xl border-[3px] border-violet-400">
+              <div className="col-span-6 h-[500px] overflow-hidden rounded-xl border-[3px] border-violet-400">
                 <Image
-                  src="/images/about/about-1.jpg"
+                  src={selectedImages.main}
                   alt="Featured Speaker"
-                  width={500}
-                  height={400}
+                  width={600}
+                  height={500}
                   className="h-full w-full object-cover"
                 />
               </div>
               {/* Two smaller images below */}
-              <div className="col-span-3 h-[200px] overflow-hidden rounded-xl border-[3px] border-emerald-400">
+              <div className="col-span-3 h-[240px] overflow-hidden rounded-xl border-[3px] border-emerald-400">
                 <Image
-                  src="/images/about/about-2.jpg"
+                  src={selectedImages.left}
                   alt="Featured Speaker"
-                  width={240}
-                  height={200}
+                  width={300}
+                  height={240}
                   className="h-full w-full object-cover"
                 />
               </div>
-              <div className="col-span-3 h-[200px] overflow-hidden rounded-xl border-[3px] border-blue-500">
+              <div className="col-span-3 h-[240px] overflow-hidden rounded-xl border-[3px] border-blue-500">
                 <Image
-                  src="/images/about/about-3.jpg"
+                  src={selectedImages.right}
                   alt="Featured Speaker"
-                  width={240}
-                  height={200}
+                  width={300}
+                  height={240}
                   className="h-full w-full object-cover"
                 />
               </div>
