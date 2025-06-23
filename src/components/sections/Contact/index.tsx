@@ -110,7 +110,7 @@ const Contact = () => {
                 </div>
                 <div>
                   <p className="text-base font-medium text-white">Address</p>
-                  <p className="text-base text-gray-400">123 Business Street, Suite 100<br />New York, NY 10001</p>
+                  <p className="text-base text-gray-400">3324 24th Street LIC<br />Astoria NY 11106</p>
                 </div>
               </div>
             </div>

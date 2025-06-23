@@ -36,7 +36,7 @@ const Footer = () => {
                     <path d="M8 10.8333C9.38071 10.8333 10.5 9.71404 10.5 8.33333C10.5 6.95262 9.38071 5.83333 8 5.83333C6.61929 5.83333 5.5 6.95262 5.5 8.33333C5.5 9.71404 6.61929 10.8333 8 10.8333Z" stroke="white" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
                   </svg>
                 </div>
-                <span className="text-white">132 Dartmouth Street Boston,<br />Massachusetts 02156<br />United States</span>
+                <span className="text-white">3324 24th Street LIC<br />Astoria NY 11106<br />United States</span>
               </div>
             </div>
           </div>

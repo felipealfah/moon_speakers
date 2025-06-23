@@ -11,13 +11,21 @@ const speakerImages = [
   '/images/hero/4.webp',
   '/images/hero/5.webp',
   '/images/hero/6.webp',
+  '/images/hero/7.webp',
   '/images/hero/8.webp',
   '/images/hero/9.webp',
-  '/images/hero/10.webp',
 ];
 
-// Imagem principal fixa
-const mainSpeakerImage = '/images/hero/main.webp';
+// Array com 4 imagens para o speaker principal
+const mainSpeakerImages = [
+  '/images/hero/main_1.webp',
+  '/images/hero/main_2.webp',
+  '/images/hero/main_3.webp',
+  '/images/hero/main_4.webp'
+];
+
+// Imagem de fallback caso alguma imagem não carregue
+const fallbackImage = '/images/hero/1.webp';
 
 // Posições base dos speakers
 const speakerPositions = [
@@ -67,12 +75,25 @@ const Hero = () => {
   const [currentSpeakers, setCurrentSpeakers] = useState<Array<{ image: string; position: typeof speakerPositions[0] }>>([]);
   const [nextSpeakers, setNextSpeakers] = useState<Array<{ image: string; position: typeof speakerPositions[0] }>>([]);
   const [isTransitioning, setIsTransitioning] = useState(false);
+  const [currentMainImageIndex, setCurrentMainImageIndex] = useState(0);
+  const [imageErrors, setImageErrors] = useState<Set<string>>(new Set());
 
   const scrollToContact = () => {
     const contactSection = document.getElementById('contact');
     if (contactSection) {
       contactSection.scrollIntoView({ behavior: 'smooth' });
     }
+  };
+
+  // Função para tratar erros de carregamento de imagem
+  const handleImageError = (imageSrc: string) => {
+    console.warn(`Failed to load image: ${imageSrc}`);
+    setImageErrors(prev => new Set(prev).add(imageSrc));
+  };
+
+  // Função para obter imagem com fallback
+  const getImageWithFallback = (imageSrc: string) => {
+    return imageErrors.has(imageSrc) ? fallbackImage : imageSrc;
   };
 
   // Função para embaralhar array
@@ -88,8 +109,13 @@ const Hero = () => {
   const updateSpeakers = () => {
     // Prepara as próximas imagens
     const shuffledImages = shuffleArray([...speakerImages]);
+    
+    // Avança para a próxima imagem principal
+    const nextMainImageIndex = (currentMainImageIndex + 1) % mainSpeakerImages.length;
+    setCurrentMainImageIndex(nextMainImageIndex);
+    
     const newSpeakers = speakerPositions.map((position, index) => ({
-      image: position.isMain ? mainSpeakerImage : shuffledImages[index - 1],
+      image: position.isMain ? mainSpeakerImages[nextMainImageIndex] : shuffledImages[index - 1],
       position
     }));
 
@@ -108,7 +134,7 @@ const Hero = () => {
     // Configuração inicial
     const shuffledImages = shuffleArray([...speakerImages]);
     const initialSpeakers = speakerPositions.map((position, index) => ({
-      image: position.isMain ? mainSpeakerImage : shuffledImages[index - 1],
+      image: position.isMain ? mainSpeakerImages[0] : shuffledImages[index - 1],
       position
     }));
     setCurrentSpeakers(initialSpeakers);
@@ -235,34 +261,36 @@ const Hero = () => {
                 {/* Current Image Layer */}
                 <div 
                   className={`absolute inset-0 transition-opacity duration-[1200ms] ease-in-out ${
-                    !speaker.position.isMain && isTransitioning ? 'opacity-0' : 'opacity-100'
+                    isTransitioning ? 'opacity-0' : 'opacity-100'
                   }`}
                 >
                   <Image
-                    src={speaker.image}
+                    src={getImageWithFallback(speaker.image)}
                     alt={`Featured Speaker ${index + 1}`}
                     fill
                     className="object-cover"
                     sizes="(max-width: 768px) 100vw, 50vw"
+                    onError={() => handleImageError(speaker.image)}
+                    quality={90}
                   />
                 </div>
 
                 {/* Next Image Layer */}
-                {!speaker.position.isMain && (
-                  <div 
-                    className={`absolute inset-0 transition-opacity duration-[1200ms] ease-in-out ${
-                      isTransitioning ? 'opacity-100' : 'opacity-0'
-                    }`}
-                  >
-                    <Image
-                      src={nextSpeakers[index]?.image || speaker.image}
-                      alt={`Next Featured Speaker ${index + 1}`}
-                      fill
-                      className="object-cover"
-                      sizes="(max-width: 768px) 100vw, 50vw"
-                    />
-                  </div>
-                )}
+                <div 
+                  className={`absolute inset-0 transition-opacity duration-[1200ms] ease-in-out ${
+                    isTransitioning ? 'opacity-100' : 'opacity-0'
+                  }`}
+                >
+                  <Image
+                    src={getImageWithFallback(nextSpeakers[index]?.image || speaker.image)}
+                    alt={`Next Featured Speaker ${index + 1}`}
+                    fill
+                    className="object-cover"
+                    sizes="(max-width: 768px) 100vw, 50vw"
+                    onError={() => handleImageError(nextSpeakers[index]?.image || speaker.image)}
+                    quality={90}
+                  />
+                </div>
               </div>
             ))}
           </div>
